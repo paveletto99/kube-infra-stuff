@@ -18,7 +18,7 @@
     "ghcr.io/devcontainers/features/docker-in-docker",
     "ghcr.io/devcontainers/features/common-utils"
   ],
-  "postCreateCommand": "pre-commit install",
+  "postCreateCommand": "pre-commit install && chmod +x .devcontainer/post-install.sh && .devcontainer/post-install.sh",
   "customizations": {
     "vscode": {
       "extensions": [

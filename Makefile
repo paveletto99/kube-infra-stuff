@@ -41,7 +41,7 @@ kind-create-cluster:
 	)
 .PHONY: kind-create-cluster
 
-create-cilium-cluster:
+kind-create-cilium-cluster:
 	kind create cluster --name cilium-playground \
 		--config=./kubernetes/kind/kind-cilium.yaml \
 		--kubeconfig  ${KIND_KUBECONFIG_DIR}/kind-cilium-play.kubeconfig
@@ -51,6 +51,13 @@ create-cilium-cluster:
 	cilium hubble enable --ui
 	cilium connectivity test --request-timeout 30s --connect-timeout 10s
 .PHONY: create-cilium-cluster
+
+kind-config-cluster:
+	docker exec -t $(name) bash -c "echo 'fs.inotify.max_user_watches=1048576' >> /etc/sysctl.conf"
+	docker exec -t $(name) bash -c "echo 'fs.inotify.max_user_instances=512' >> /etc/sysctl.conf"
+	docker exec -i $(name) bash -c "sysctl -p /etc/sysctl.conf"
+.PHONY: kind-config-cluster
+
 
 get-cluster-token:
 # kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") -o go-template="{{.data.token | base64decode}}"

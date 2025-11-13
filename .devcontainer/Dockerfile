@@ -42,3 +42,5 @@ WORKDIR /workspace
 
 # Install pre-commit
 RUN pip3 install pre-commit && pre-commit install
+
+# Install cilium CLI
