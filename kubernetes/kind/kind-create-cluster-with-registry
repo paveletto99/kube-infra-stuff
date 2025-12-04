@@ -137,7 +137,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/late
 kubectl patch -n kube-system deployment metrics-server --type=json \\n  -p '[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-insecure-tls"}]'
 
 echo "Add Taint to control-plane"
-kubectl taint nodes -l node-role.kubernetes.io/control-plane node-role.kubernetes.io/control-plane=:NoSchedule
+kubectl taint nodes --overwrite -l node-role.kubernetes.io/control-plane node-role.kubernetes.io/control-plane=:NoSchedule
 # FIXME https://github.com/kubernetes/kubernetes/issues/83242
 # kubectl wait --namespace ingress-nginx \
 #   --for=condition=ready pod \
@@ -145,12 +145,13 @@ kubectl taint nodes -l node-role.kubernetes.io/control-plane node-role.kubernete
 #   --timeout=90s
 
 # Install Opentelemetry operator 🔭🔭🔭
-kubectl --context kind-otel-target-allocator-talk apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.102.0/opentelemetry-operator.yaml
+# kubectl --context kind-otel-target-allocator-talk apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/download/v0.102.0/opentelemetry-operator.yaml
 
 #echo "Installing ARGOCD 👽📦"
 #### Install ARGOCD
 kubectl create ns argo
 kubectl apply -n argo -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
 
 # FIXME https://github.com/kubernetes/kubernetes/issues/83242
 # kubectl wait --namespace argocd \
